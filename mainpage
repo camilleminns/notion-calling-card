@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>hi, i'm [NAME] ✦</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FDF6EC;
+    --blush: #F2C4B2;
+    --terracotta: #C96A4A;
+    --sage: #7A9E7E;
+    --forest: #3B5E42;
+    --ink: #1C1C1C;
+    --warm-grey: #8A7D74;
+    --paper: #FAF3E8;
+    --highlight: #F5E642;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background-color: var(--cream);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.5;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 4rem 2rem;
+    position: relative;
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 80%, #F2C4B240 0%, transparent 60%),
+      radial-gradient(ellipse 50% 40% at 80% 20%, #7A9E7E30 0%, transparent 60%),
+      var(--cream);
+  }
+
+  .hero-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    margin-bottom: 2rem;
+    border: 1px solid var(--terracotta);
+    padding: 0.35rem 1rem;
+    display: inline-block;
+    border-radius: 100px;
+  }
+
+  .hero-name {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(4rem, 12vw, 9rem);
+    line-height: 0.92;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-name em {
+    font-style: italic;
+    color: var(--terracotta);
+  }
+
+  .hero-sub {
+    font-size: 1.05rem;
+    color: var(--warm-grey);
+    max-width: 380px;
+    line-height: 1.7;
+    margin-bottom: 3rem;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 2.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--ink);
+    display: block;
+  }
+
+  .stat-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--warm-grey);
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--warm-grey);
+    animation: bob 2s ease-in-out infinite;
+  }
+
+  @keyframes bob {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(6px); }
+  }
+
+  /* ── SECTION WRAPPER ── */
+  .section {
+    padding: 5rem 2rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+    margin-bottom: 2.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--blush);
+  }
+
+  /* ── ABOUT GRID ── */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 600px) {
+    .about-grid { grid-template-columns: 1fr; }
+    .hero-stats { gap: 1.5rem; }
+  }
+
+  .about-card {
+    background: var(--paper);
+    border: 1px solid #E8DDD0;
+    border-radius: 16px;
+    padding: 1.75rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .about-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.07);
+  }
+
+  .about-card.wide { grid-column: 1 / -1; }
+
+  .card-prompt {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--terracotta);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.75rem;
+  }
+
+  .card-answer {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+
+  .card-answer.small {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 300;
+    line-height: 1.75;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--blush), transparent);
+    margin: 0;
+  }
+
+  /* ── STRIPE SECTION ── */
+  .stripe {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 5rem 2rem;
+  }
+
+  .stripe .section {
+    padding: 0;
+  }
+
+  .stripe .section-label {
+    color: var(--blush);
+  }
+
+  .stripe .section-label::after {
+    background: #444;
+  }
+
+  /* ── VALUES CHECKLIST ── */
+  .values-intro {
+    font-size: 1rem;
+    color: #AAA;
+    margin-bottom: 2.5rem;
+    line-height: 1.7;
+  }
+
+  .values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .value-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+    border: 1px solid #333;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+  }
+
+  .value-item:hover {
+    border-color: var(--sage);
+  }
+
+  .value-item.checked {
+    border-color: var(--sage);
+    background: #7A9E7E18;
+  }
+
+  .value-checkbox {
+    width: 20px;
+    height: 20px;
+    border: 1.5px solid #555;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 0.7rem;
+    transition: all 0.15s ease;
+  }
+
+  .value-item.checked .value-checkbox {
+    background: var(--sage);
+    border-color: var(--sage);
+  }
+
+  .value-label {
+    font-size: 0.9rem;
+    color: #CCC;
+    font-weight: 300;
+  }
+
+  .value-item.checked .value-label {
+    color: #fff;
+  }
+
+  .match-meter {
+    margin-top: 2rem;
+    padding: 1.25rem 1.5rem;
+    border: 1px solid #333;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .meter-bar-wrap {
+    flex: 1;
+    min-width: 150px;
+    height: 6px;
+    background: #333;
+    border-radius: 100px;
+    overflow: hidden;
+  }
+
+  .meter-bar {
+    height: 100%;
+    background: linear-gradient(to right, var(--sage), var(--highlight));
+    border-radius: 100px;
+    transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .meter-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    color: #AAA;
+    white-space: nowrap;
+  }
+
+  .meter-text span {
+    color: var(--highlight);
+    font-weight: 700;
+  }
+
+  /* ── FLAGS ── */
+  .flags-section {
+    padding: 5rem 2rem;
+    background: var(--paper);
+  }
+
+  .flags-section .section {
+    padding: 0;
+  }
+
+  .flags-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  @media (max-width: 600px) {
+    .flags-grid { grid-template-columns: 1fr; }
+    .about-grid { grid-template-columns: 1fr; }
+  }
+
+  .flags-column h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .flag-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .flag-item {
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+  }
+
+  .flag-item.green {
+    background: #7A9E7E18;
+    border-left: 3px solid var(--sage);
+    color: var(--forest);
+  }
+
+  .flag-item.red {
+    background: #C96A4A15;
+    border-left: 3px solid var(--terracotta);
+    color: #8B3A20;
+  }
+
+  .flag-emoji { flex-shrink: 0; }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials-section {
+    padding: 5rem 2rem;
+    background: var(--cream);
+  }
+
+  .testimonials-section .section { padding: 0; }
+
+  .testimonials-intro {
+    font-size: 0.95rem;
+    color: var(--warm-grey);
+    margin-bottom: 2.5rem;
+    font-style: italic;
+  }
+
+  .testimonial-scroll {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.25rem;
+  }
+
+  .testimonial-card {
+    background: var(--paper);
+    border: 1px solid #E8DDD0;
+    border-radius: 16px;
+    padding: 1.5rem;
+    position: relative;
+    transition: transform 0.2s ease;
+  }
+
+  .testimonial-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .testimonial-card::before {
+    content: '"';
+    font-family: 'Playfair Display', serif;
+    font-size: 5rem;
+    color: var(--blush);
+    position: absolute;
+    top: -0.5rem;
+    left: 1rem;
+    line-height: 1;
+  }
+
+  .testimonial-text {
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--ink);
+    margin-top: 2rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .author-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    background: var(--blush);
+    flex-shrink: 0;
+  }
+
+  .author-name {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--ink);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .author-role {
+    font-size: 0.75rem;
+    color: var(--warm-grey);
+  }
+
+  /* ── CONTACT FOOTER ── */
+  .footer {
+    background: var(--ink);
+    color: var(--cream);
+    text-align: center;
+    padding: 5rem 2rem;
+  }
+
+  .footer-eyebrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--blush);
+    margin-bottom: 1.5rem;
+  }
+
+  .footer-headline {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 6vw, 4rem);
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+  }
+
+  .footer-headline em {
+    font-style: italic;
+    color: var(--blush);
+  }
+
+  .footer-sub {
+    font-size: 0.95rem;
+    color: #888;
+    margin-bottom: 3rem;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 4rem;
+  }
+
+  .footer-link {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--cream);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-bottom: 1px solid #444;
+    padding-bottom: 2px;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .footer-link:hover {
+    border-color: var(--blush);
+    color: var(--blush);
+  }
+
+  .footer-fine {
+    font-size: 0.75rem;
+    color: #555;
+    font-style: italic;
+  }
+
+  /* ── STICKER ACCENTS ── */
+  .sticker {
+    display: inline-block;
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    background: var(--highlight);
+    color: var(--ink);
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    transform: rotate(-1.5deg);
+    font-size: 0.9rem;
+  }
+
+  /* ── FADE IN ANIMATION ── */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── QUICK FACTS TICKER ── */
+  .ticker-wrap {
+    background: var(--terracotta);
+    overflow: hidden;
+    padding: 0.75rem 0;
+    white-space: nowrap;
+  }
+
+  .ticker {
+    display: inline-block;
+    animation: ticker 22s linear infinite;
+  }
+
+  .ticker span {
+    color: var(--cream);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    margin-right: 3rem;
+  }
+
+  .ticker span::before {
+    content: '✦ ';
+    color: var(--highlight);
+  }
+
+  @keyframes ticker {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════ HERO ══════════ -->
+<section class="hero">
+  <div class="hero-tag">est. [YEAR] · [CITY]</div>
+  <h1 class="hero-name">
+    hi, i'm<br><em>[Name].</em>
+  </h1>
+  <p class="hero-sub">
+    [Your one-liner here — something warm, a little funny, totally you. Think: tagline, not biography.]
+  </p>
+  <div class="hero-stats">
+    <div class="stat">
+      <span class="stat-num">28</span>
+      <span class="stat-label">years old</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">🌇</span>
+      <span class="stat-label">Chicago</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">5'7"</span>
+      <span class="stat-label">height</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">♋</span>
+      <span class="stat-label">Cancer sun</span>
+    </div>
+  </div>
+  <div class="scroll-hint">↓ scroll to learn more</div>
+</section>
+
+<!-- ══════════ TICKER ══════════ -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <span>dog person</span><span>obsessive playlist curator</span><span>will always split dessert</span><span>bookshelf judger (sorry)</span><span>early riser</span><span>chronic over-tipper</span><span>weekend market person</span><span>asks too many questions</span><span>dog person</span><span>obsessive playlist curator</span><span>will always split dessert</span><span>bookshelf judger (sorry)</span><span>early riser</span><span>chronic over-tipper</span><span>weekend market person</span><span>asks too many questions</span>
+  </div>
+</div>
+
+<!-- ══════════ ABOUT + PROMPTS ══════════ -->
+<section class="section fade-up">
+  <div class="section-label">01 — About Me</div>
+  <div class="about-grid">
+
+    <div class="about-card wide">
+      <div class="card-prompt">The short version</div>
+      <p class="card-answer small">
+        [2–3 sentences. Paint a picture of your everyday life — what you do, what lights you up, what someone would notice about you in the first 10 minutes. Not a résumé. Think "at a party, not on LinkedIn."]
+      </p>
+    </div>
+
+    <div class="about-card">
+      <div class="card-prompt">I'll impress you with my ability to —</div>
+      <p class="card-answer">[e.g., "remember every album's release year from 2004–2012"]</p>
+    </div>
+
+    <div class="about-card">
+      <div class="card-prompt">Two truths and a lie —</div>
+      <p class="card-answer small">
+        1. [Truth]<br>
+        2. [Truth]<br>
+        3. [Lie — keep 'em guessing]
+      </p>
+    </div>
+
+    <div class="about-card">
+      <div class="card-prompt">A non-negotiable in my life —</div>
+      <p class="card-answer">[e.g., "Sunday morning slow starts. No exceptions."]</p>
+    </div>
+
+    <div class="about-card">
+      <div class="card-prompt">My love language is —</div>
+      <p class="card-answer">[e.g., "Quality time + sending you videos at 11pm that made me think of you"]</p>
+    </div>
+
+    <div class="about-card wide">
+      <div class="card-prompt">What I'm actually looking for</div>
+      <p class="card-answer small">
+        [Be honest here — are you dating casually? Looking for something real? Open to friendship too? This is the place to be direct without being intense. E.g., "Someone I can travel with and also do nothing with. Ideally someone who texts back."]
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════ VALUES CHECKLIST ══════════ -->
+<section class="stripe">
+  <div class="section fade-up">
+    <div class="section-label">02 — Values Check</div>
+    <p class="values-intro">
+      Check off any values that resonate with you — curious what overlaps we'd have. No wrong answers. No judgment.<br>
+      <span style="font-size:0.8rem; opacity:0.5;">(this is just for fun — the meter below updates as you click)</span>
+    </p>
+
+    <div class="values-grid" id="valuesGrid">
+      <!-- generated by JS -->
+    </div>
+
+    <div class="match-meter">
+      <div class="meter-bar-wrap">
+        <div class="meter-bar" id="meterBar" style="width:0%"></div>
+      </div>
+      <div class="meter-text">You share <span id="meterNum">0</span> of my values ✦</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FLAGS ══════════ -->
+<section class="flags-section fade-up">
+  <div class="section">
+    <div class="section-label">03 — Green &amp; Red Flags</div>
+    <div class="flags-grid">
+
+      <div class="flags-column">
+        <h3>🟢 Green Flags</h3>
+        <ul class="flag-list">
+          <li class="flag-item green"><span class="flag-emoji">✓</span> Asks follow-up questions when you talk</li>
+          <li class="flag-item green"><span class="flag-emoji">✓</span> Has at least one niche, slightly embarrassing passion</li>
+          <li class="flag-item green"><span class="flag-emoji">✓</span> Comfortable with silence on long drives</li>
+          <li class="flag-item green"><span class="flag-emoji">✓</span> Remembers small things you mentioned weeks ago</li>
+          <li class="flag-item green"><span class="flag-emoji">✓</span> Can disagree without making it weird</li>
+          <li class="flag-item green"><span class="flag-emoji">✓</span> Reads (anything — magazines count)</li>
+          <li class="flag-item green"><span class="flag-emoji">✓</span> Tips well and is kind to service staff</li>
+          <li class="flag-item green"><span class="flag-emoji">✓</span> Has a relationship with their family (even a complicated one they've thought about)</li>
+        </ul>
+      </div>
+
+      <div class="flags-column">
+        <h3>🔴 Red Flags</h3>
+        <ul class="flag-list">
+          <li class="flag-item red"><span class="flag-emoji">✗</span> Makes everything a competition</li>
+          <li class="flag-item red"><span class="flag-emoji">✗</span> Talks about exes like case studies in wrongness</li>
+          <li class="flag-item red"><span class="flag-emoji">✗</span> "I don't really read" (I'll get over it, but I'll notice)</li>
+          <li class="flag-item red"><span class="flag-emoji">✗</span> Chronically non-committal about plans</li>
+          <li class="flag-item red"><span class="flag-emoji">✗</span> Performs busyness as a personality trait</li>
+          <li class="flag-item red"><span class="flag-emoji">✗</span> Thinks being emotionally unavailable is mysterious</li>
+          <li class="flag-item red"><span class="flag-emoji">✗</span> Can't laugh at themselves</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ══════════ TESTIMONIALS ══════════ -->
+<section class="testimonials-section fade-up">
+  <div class="section">
+    <div class="section-label">04 — Dispatches from Friends</div>
+    <p class="testimonials-intro">
+      I asked my people to describe me in one honest paragraph. Here's what they said. (I had no editorial control.)
+    </p>
+
+    <div class="testimonial-scroll">
+
+      <div class="testimonial-card">
+        <p class="testimonial-text">
+          [Name] will remember your coffee order after one conversation and somehow also forget to respond to your text for 3 days. It's a paradox. We love them anyway.
+        </p>
+        <div class="testimonial-author">
+          <div class="author-avatar">🌻</div>
+          <div>
+            <div class="author-name">Jamie R.</div>
+            <div class="author-role">friend of 7 years</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <p class="testimonial-text">
+          Will absolutely cry at the end of a good book and then recommend it to you immediately. Passionate about everything she cares about. You always know where you stand.
+        </p>
+        <div class="testimonial-author">
+          <div class="author-avatar">🍂</div>
+          <div>
+            <div class="author-name">Sam K.</div>
+            <div class="author-role">college roommate</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card">
+        <p class="testimonial-text">
+          Genuinely the best person to call when you don't know what to do. Not because she gives good advice — though she does — but because she actually listens first.
+        </p>
+        <div class="testimonial-author">
+          <div class="author-avatar">🌙</div>
+          <div>
+            <div class="author-name">Alex M.</div>
+            <div class="author-role">work friend turned real friend</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FOOTER / REACH OUT ══════════ -->
+<footer class="footer fade-up">
+  <div class="footer-eyebrow">05 — Let's Connect</div>
+  <h2 class="footer-headline">Still here?<br>Say <em>hello.</em></h2>
+  <p class="footer-sub">
+    If you made it this far, we probably have something to talk about. I'm best reached via Instagram DM or email — pick your medium.
+  </p>
+  <div class="footer-links">
+    <a href="mailto:you@email.com" class="footer-link">✉ Email me</a>
+    <a href="https://instagram.com/yourhandle" class="footer-link">📷 Instagram</a>
+    <a href="https://open.spotify.com" class="footer-link">🎵 My playlists</a>
+  </div>
+  <p class="footer-fine">
+    you found this via a little card i gave you in person. thanks for being curious. ✦
+  </p>
+</footer>
+
+<script>
+  // ── VALUES DATA ──
+  const values = [
+    "Deep conversations", "Intellectual curiosity", "Loyalty", "Adventure",
+    "Work-life balance", "Creativity", "Slow mornings", "Travel often",
+    "Ambition", "Humor / levity", "Kindness as default", "Family",
+    "Financial responsibility", "Personal growth", "Spirituality / faith",
+    "Spontaneity", "Dogs (or pets generally)", "Physical health",
+    "Alone time matters", "Big social circle", "Cooking / food culture",
+    "Reading / books", "Music is essential", "Social impact work"
+  ];
+
+  // Highlight user's actual values (indices that apply to YOU)
+  const myValueIndices = new Set([0,1,2,5,6,10,11,16,17,21,22]);
+
+  const grid = document.getElementById('valuesGrid');
+  const bar = document.getElementById('meterBar');
+  const num = document.getElementById('meterNum');
+
+  let checked = new Set();
+
+  values.forEach((v, i) => {
+    const item = document.createElement('div');
+    item.className = 'value-item';
+    item.innerHTML = `<div class="value-checkbox"></div><span class="value-label">${v}</span>`;
+    item.addEventListener('click', () => {
+      if (checked.has(i)) {
+        checked.delete(i);
+        item.classList.remove('checked');
+        item.querySelector('.value-checkbox').textContent = '';
+      } else {
+        checked.add(i);
+        item.classList.add('checked');
+        item.querySelector('.value-checkbox').textContent = '✓';
+      }
+      updateMeter();
+    });
+    grid.appendChild(item);
+  });
+
+  function updateMeter() {
+    // count overlap with MY values
+    let overlap = [...checked].filter(i => myValueIndices.has(i)).length;
+    const pct = Math.round((overlap / myValueIndices.size) * 100);
+    bar.style.width = pct + '%';
+    num.textContent = overlap;
+  }
+
+  // ── SCROLL ANIMATIONS ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
